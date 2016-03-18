@@ -36,7 +36,7 @@ void setup()
    SM.init(SMPinY,SMPinZ,PinY_CW,PinZ_CW,SPEED);
    Serial.println("16 channel Servo test!");
    pwm.setPWMFreq(60);  // Analog servos run at ~60 Hz updates
- 
+   Wire.begin();
 }
 void setServoPulse(uint8_t n, double pulse) {
   double pulselength;
@@ -111,7 +111,7 @@ void loop()
        c[2]=sms[45];
        c[3]=sms[46];
        SIM.SendSMS(tel,sms);//发送短信
-       Wire.beginTransmission(0x01);
+       Wire.beginTransmission(1);
        Wire.write(c);
        Wire.endTransmission();
        y=random(1,4);//产生货柜号
