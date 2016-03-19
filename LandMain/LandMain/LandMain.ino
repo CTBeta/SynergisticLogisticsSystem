@@ -111,9 +111,13 @@ void loop()
        c[2]=sms[45];
        c[3]=sms[46];
        SIM.SendSMS(tel,sms);//发送短信
+       for(x=0;x<=3;x++)
+       {
        Wire.beginTransmission(1);
+       Wire.write("233");
        Wire.write(c);
        Wire.endTransmission();
+       }
        y=random(1,4);//产生货柜号
        //存储货柜号
        for(x=0;x<=3;x++)
