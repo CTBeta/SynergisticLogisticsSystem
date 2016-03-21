@@ -7,7 +7,7 @@
 int d[4]={0,0,0,0};//已占用货柜号
 CTB_Stepper SM;
 PWMServoDriver pwm = PWMServoDriver();
-const int SMPinY=9,SMPinZ=1,PinY_CW=8,PinZ_CW=1,SPEED=100; //步进电机参数
+const int SMPinY=9,SMPinZ=7,PinY_CW=8,PinZ_CW=6,SPEED=100; //步进电机参数
 RFID rfid(10,5); //D10--读卡器MOSI引脚、D5--读卡器RST引脚
 //设置旋转角度
 #define SERVOMIN  150 // this is the 'minimum' pulse length count (out of 4096)
@@ -59,7 +59,8 @@ void loop()
     ,'a','n','d',' ','t','h','e',' ','p','a','s','s','w','o','r','d',' ','i','s',':','*','*','*','*'};
    char c[4];//储存临时随机密码
 
-   int x,y,st1,st2=0;//y：货柜号   st：载物台移动步数
+   int x,y=0;//y：货柜号   st：载物台移动步数
+   int st1,st2=5000;
    CTB_SIM900A SIM;
    unsigned char i,tmp;
    unsigned char status;
@@ -127,35 +128,7 @@ void loop()
            y=random(1,4);
          }
        }y=1;
-       if(d[0]!=0)
-       {
-        if(d[1]!=0)
-        {
-          if(d[2]!=0)
-          {
-            if(d[3]!=0)
-            {
-              Serial.print(" ");
-            }
-            else
-            {
-              d[3]=y;
-            }
-          }
-          else
-          {
-            d[2]=y;
-          }
-        }
-        else
-        {
-          d[1]=y;
-        }
-       }
-       else
-       {
-        d[0]=y;
-       }
+      
         for(x=0;x<=3;x++)
        {
          Serial.println(d[x]);
@@ -164,13 +137,13 @@ void loop()
        //取载物台移动步数
        if(y<=2)
        {
-         st1=50000;
-         st2=y*50000;
+         st1=5000;
+         st2=y*5000;
        }
        else
        {
-         st1=50000;
-         st2=y/2*50000;
+         st1=5000;
+         st2=y/2*5000;
        }
        //移动载物台至指定货柜
        for(x=0;x<=st1;x++)
