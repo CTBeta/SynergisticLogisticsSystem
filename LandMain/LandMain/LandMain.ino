@@ -29,7 +29,7 @@ unsigned char sectorNewKeyA[16][16] = {
 
 void setup()
 {
-   Serial.begin(9600);
+   Serial.begin(115200);
    SPI.begin();
    pwm.begin();
    rfid.init();
@@ -119,6 +119,10 @@ void loop()
        Wire.write(c);
        Wire.endTransmission();
        }
+       Wire.beginTransmission(1);
+       Wire.write("233");
+       Wire.write(c);
+       Wire.endTransmission();
        y=random(1,4);//产生货柜号
        //存储货柜号
        for(x=0;x<=3;x++)
@@ -158,11 +162,13 @@ void loop()
        Serial.print("servonum:");
        Serial.println(servonum);
        for (uint16_t pulselen = SERVOMIN; pulselen < SERVOMAX; pulselen++) {
-         pwm.setPWM(servonum, 0, pulselen);
+         pwm.setPWM(0, 0, pulselen);
+         pwm.setPWM(1, 0, pulselen);
        }
        delay(3000);
        for (uint16_t pulselen = SERVOMAX; pulselen > SERVOMIN; pulselen--) {
-         pwm.setPWM(servonum, 0, pulselen);
+         pwm.setPWM(0, 0, pulselen);
+         pwm.setPWM(1, 0, pulselen);
        }
        //载物台复位
        for(x=0;x<=st1;x++)

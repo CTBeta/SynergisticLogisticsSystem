@@ -1,10 +1,15 @@
 #include <Wire.h>
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Wire.begin(1);
+  Wire.onReceive(receiveEvent); // register event
 }
 
 void loop() {
+  delay(100);
+}
+
+void receiveEvent(int howMany) {
   char a[4];
   Wire.requestFrom(1, 4);    // request 6 bytes from slave device #2
 
