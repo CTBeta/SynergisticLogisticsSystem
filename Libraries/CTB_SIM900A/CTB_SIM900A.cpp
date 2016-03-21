@@ -57,7 +57,5 @@ void CTB_SIM900A::SendSMS(char tel[],char sms[])
 	{
 		Serial.print(sms[i]);
 	}
-	Serial.println();
-	delay(200);
 	Serial.println((char)26); //输入CRTL+Z或串口输出0X1A终止符
 }
