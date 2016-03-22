@@ -15,7 +15,7 @@ class CTB_DigitalInput
 public:   
 	CTB_DigitalInput();
 	void init(int _pin[]);
-	int get(int num);
+	int get();
 
 private:
 	int pin[8];
