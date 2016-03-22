@@ -13,10 +13,13 @@ class CTB_DigitalInput
 {
 
 public:   
-
 	CTB_DigitalInput();
-	void init(int pin[]);
+	void init(int _pin[]);
+	int get(int num);
 
+private:
+	int pin[8];
+	
 
 }; 
 

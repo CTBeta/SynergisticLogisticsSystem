@@ -18,11 +18,48 @@ CTB_DigitalInput::CTB_DigitalInput()
  * 输入参数：无
  * 返 回 值：无
  ******************************************************************************/
-void CTB_DigitalInput::init(int pin[])
+void CTB_DigitalInput::init(int _pin[])
 {
+	for(int i=0;i<=7;i++)
+	{
+		pin[i]=_pin[i];
+	}
+	
 	for(int i=0;i<=7;i++)
 	{
 		pinMode(pin[i],INPUT);
 	}
-	
  }
+
+int CTB_DigitalInput::get(int num)
+{
+	int got[num];
+	int find=1;
+	while(true)
+	{
+		int tmp;
+		for(int i=0;i<=7;i++)
+		{
+			if (digitalRead(pin[i])==1)
+			{
+				switch(i)
+				{
+					case 0:got[find]=1;break;
+					case 1:got[find]=2;break;
+					case 2:got[find]=3;break;
+					case 3:got[find]=4;break;
+					case 4:got[find]=5;break;
+					case 5:got[find]=6;break;
+					case 6:got[find]=7;break;
+					case 7:got[find]=8;
+				}
+				find++;
+			}
+		}
+		if(find==num)
+		{
+			break;
+		}	
+	}
+	return got;
+}
