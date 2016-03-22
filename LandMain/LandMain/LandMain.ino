@@ -121,3 +121,14 @@ void loop()
      }
    }
 }
+
+
+String comdata = "";
+void uart()
+ {
+     while (Serial.available() > 0)  
+     {
+         comdata += char(Serial.read());
+         delay(2);
+     }
+ }
