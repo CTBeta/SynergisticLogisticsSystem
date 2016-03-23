@@ -63,7 +63,8 @@ void CTB_DigitalInput::init(int _pin[])
 		if(got!=0)
 		{
 			break;
-		}	
+		}
+		delay(10);
 	}
 	return got;
 }
