@@ -1,4 +1,5 @@
 #include <SPI.h>
+#include <string.h>
 #include <CTB_SIM900A.h>
 #include <CTB_Stepper.h>
 #include <PWMServoDriver.h>
@@ -6,10 +7,18 @@ int d[4]={0,0,0,0};//已占用货柜号
 CTB_Stepper SM;
 PWMServoDriver pwm = PWMServoDriver();
 const int SMPinY=9,SMPinZ=7,PinY_CW=8,PinZ_CW=6,SPEED=100; //步进电机参数
-//设置旋转角度
-#define SERVOMIN  150 // this is the 'minimum' pulse length count (out of 4096)
-#define SERVOMAX  450 // this is the 'maximum' pulse length count (out of 4096)
-
+char comdata[11];
+void uart()
+ {
+     int x=0;
+     while (Serial2.available() > 0)  
+     {
+         comdata[x]=char(Serial2.read());
+         delay(2);
+         x++;
+     }
+ }
+ 
 void setup()
 {
    Serial.begin(115200);
@@ -19,6 +28,7 @@ void setup()
    Serial.println("16 channel Servo test!");
    pwm.setPWMFreq(60);  // Analog servos run at ~60 Hz updates
 }
+
 void setServoPulse(uint8_t n, double pulse) {
   double pulselength;
   
@@ -32,6 +42,7 @@ void setServoPulse(uint8_t n, double pulse) {
   Serial.println(pulse);
   pwm.setPWM(n, 0, pulse);
 }
+
 void loop()
 {
    char tel[11];
@@ -39,15 +50,19 @@ void loop()
     'Y','o','u',' ','h','a','v','e',' ','e','x','p','r','e','s','s','a','g','e','(','s',')',','
     ,'a','n','d',' ','t','h','e',' ','p','a','s','s','w','o','r','d',' ','i','s',':','*','*','*','*'};
    int c[4];//储存临时随机密码
-   int x,y,i=0;//y：货柜号   st：载物台移动步数
+   int x,y=0;//y：货柜号   st：载物台移动步数
    int st1,st2=5000;
    int servonum;
+   int SERVOMIN=150;
+   int SERVOMAX=500;
    CTB_SIM900A SIM;
-   i=Serial.read();
-   Serial.println(i);
-   delay(1000);
-   if(i==1)
+   if(Serial2.read()>0)
    {
+      uart();
+     for(x=0;x<=10;x++)
+     {
+       tel[x]=comdata[x];
+     }
      //发送短信及取货密码
      SIM.init();//初始化SIM900A
      for(x=0;x<=10;x++)
@@ -123,12 +138,4 @@ void loop()
 }
 
 
-String comdata = "";
-void uart()
- {
-     while (Serial.available() > 0)  
-     {
-         comdata += char(Serial.read());
-         delay(2);
-     }
- }
+
