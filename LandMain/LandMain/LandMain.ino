@@ -1,9 +1,11 @@
 #include <SPI.h>
+#include <Wire.h>
 #include <string.h>
 #include <CTB_SIM900A.h>
 #include <CTB_Stepper.h>
 #include <PWMServoDriver.h>
 #include <CTB_DigitalInput.h>
+#define SERIAL_BUFFER_SIZE 8;
 int d[4]={0,0,0,0};//已占用货柜号
 int val=0;
 long times;
@@ -15,15 +17,15 @@ const int SMPinY=9,SMPinZ=7,PinY_CW=8,PinZ_CW=6,SPEED=70; //步进电机参数
 char comdata[11];
 
 void uart()
- {
-     int x=0;
-     while (Serial2.available() > 0)  
-     {
-         comdata[x]=char(Serial2.read());
-         delay(2);
-         x++;
-     }
- }
+{
+  int x=0;
+  while (Serial2.available() > 0)  
+  {
+    comdata[x]=char(Serial2.read());
+    delay(2);
+    x++;
+  }
+}
  
 void setup()
 {
@@ -55,20 +57,18 @@ int SERVOMAX=500;
 int servonum;
 void servo()
 {
-    
-     
-         // Drive each servo one at a time
-       Serial.print("servonum:");
-       Serial.println(servonum);
-       for (uint16_t pulselen = SERVOMIN; pulselen < SERVOMAX; pulselen++) {
-         pwm.setPWM(0, 0, pulselen);
-         pwm.setPWM(1, 0, pulselen);
-       }
-       delay(3000);
-       for (uint16_t pulselen = SERVOMAX; pulselen > SERVOMIN; pulselen--) {
-         pwm.setPWM(0, 0, pulselen);
-         pwm.setPWM(1, 0, pulselen);
-       }
+  // Drive each servo one at a time
+  Serial.print("servonum:");
+  Serial.println(servonum);
+  for (uint16_t pulselen = SERVOMIN; pulselen < SERVOMAX; pulselen++) {
+  pwm.setPWM(0, 0, pulselen);
+  pwm.setPWM(1, 0, pulselen);
+  }
+  delay(3000);
+  for (uint16_t pulselen = SERVOMAX; pulselen > SERVOMIN; pulselen--) {
+  pwm.setPWM(0, 0, pulselen);
+  pwm.setPWM(1, 0, pulselen);
+  }
 }
 
 void loop()
@@ -83,7 +83,7 @@ void loop()
    int st1=46000;
    int st2;
    CTB_SIM900A SIM;
-   //输入数值
+       
      if(Serial2.read()>0)
      {
        uart();
