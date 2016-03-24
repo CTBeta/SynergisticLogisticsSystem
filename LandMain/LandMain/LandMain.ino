@@ -13,6 +13,7 @@ CTB_DigitalInput DI;
 PWMServoDriver pwm = PWMServoDriver();
 const int SMPinY=9,SMPinZ=7,PinY_CW=8,PinZ_CW=6,SPEED=70; //步进电机参数
 char comdata[11];
+
 void uart()
  {
      int x=0;
@@ -27,6 +28,7 @@ void uart()
 void setup()
 {
    Serial.begin(115200);
+   Serial2.begin(9600);
    SPI.begin();
    pwm.begin();
    SM.init(SMPinY,SMPinZ,PinY_CW,PinZ_CW,SPEED);
@@ -48,6 +50,26 @@ void setServoPulse(uint8_t n, double pulse) {
   Serial.println(pulse);
   pwm.setPWM(n, 0, pulse);
 }
+int SERVOMIN=150;
+int SERVOMAX=500;
+int servonum;
+void servo()
+{
+    
+     
+         // Drive each servo one at a time
+       Serial.print("servonum:");
+       Serial.println(servonum);
+       for (uint16_t pulselen = SERVOMIN; pulselen < SERVOMAX; pulselen++) {
+         pwm.setPWM(0, 0, pulselen);
+         pwm.setPWM(1, 0, pulselen);
+       }
+       delay(3000);
+       for (uint16_t pulselen = SERVOMAX; pulselen > SERVOMIN; pulselen--) {
+         pwm.setPWM(0, 0, pulselen);
+         pwm.setPWM(1, 0, pulselen);
+       }
+}
 
 void loop()
 {
@@ -60,22 +82,12 @@ void loop()
    int x,y=0;//y：货柜号   st：载物台移动步数
    int st1=46000;
    int st2;
-   int servonum;
-   int SERVOMIN=150;
-   int SERVOMAX=500;
    CTB_SIM900A SIM;
    //输入数值
-   if(val!=DI.get()||millis()-times>1000)//定义延迟
-   {
-      val=DI.get();
-      Serial.println(val);
-      times=millis();
-   }
-   if(val==1)
-   {
      if(Serial2.read()>0)
      {
        uart();
+       Serial.print(comdata);
        for(x=0;x<=10;x++)
        {
          tel[x]=comdata[x];
@@ -105,10 +117,6 @@ void loop()
            y=random(1,4);
          }
        }y=1;
-       for(x=0;x<=3;x++)
-       {
-         Serial.println(d[x]);
-       }
        servonum=y-1;
        //取载物台移动步数
        if(y<=2)
@@ -128,18 +136,7 @@ void loop()
        {
          SM.StepZ(0);
        }
-       // Drive each servo one at a time
-       Serial.print("servonum:");
-       Serial.println(servonum);
-       for (uint16_t pulselen = SERVOMIN; pulselen < SERVOMAX; pulselen++) {
-         pwm.setPWM(0, 0, pulselen);
-         pwm.setPWM(1, 0, pulselen);
-       }
-       delay(3000);
-       for (uint16_t pulselen = SERVOMAX; pulselen > SERVOMIN; pulselen--) {
-         pwm.setPWM(0, 0, pulselen);
-         pwm.setPWM(1, 0, pulselen);
-       }
+       servo();
        //载物台复位
        for(x=0;x<=st1;x++)
        {
@@ -150,8 +147,8 @@ void loop()
          SM.StepZ(1);
        }
      }
-   }
-   else
+   //输入密码
+   if(val==1)
    {
       for(x=0;x<=3;x++)
       {
@@ -176,6 +173,10 @@ void loop()
         pwm.setPWM(3, 0, pulselen);
         }
         delay(500);
+      }
+      else
+      {
+        Serial.println("The password isn't correct.");
       }
    }
 }
