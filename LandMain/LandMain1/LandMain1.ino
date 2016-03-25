@@ -28,7 +28,7 @@ void loop()
   int x=0;
   unsigned char i,tmp;
   unsigned char status;
-  unsigned char str[MAX_LEN];
+  unsigned char str[16];
   unsigned char RC_size;
   unsigned char blockAddr;        //选择操作的块地址0～63
 
