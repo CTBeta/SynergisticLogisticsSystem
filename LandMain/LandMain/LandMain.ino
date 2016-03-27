@@ -37,7 +37,7 @@ int SERVOMIN=150;//舵机初末行程设定
 int SERVOMAX=400;
 int servonum;//舵机输出端口号码
 //HC-SR04
-int distance;//超声波距离
+unsigned int distance;//超声波距离
 int inputPin=2; // 定义超声波信号接收接口
 int outputPin=3; // 定义超声波信号发出接口
 
