@@ -1,6 +1,8 @@
 #include <Servo.h> 
+
 Servo myservo;
 int tmp=0;
+
 void setup() {
   pinMode(8,INPUT);
   myservo.attach(9);
@@ -10,10 +12,12 @@ void setup() {
 }
 
 void loop() {
-  digitalWrite(13, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(1000);              // wait for a second
-  digitalWrite(13, LOW);    // turn the LED off by making the voltage LOW
+  
+  digitalWrite(13, HIGH);   
+  delay(1000);              
+  digitalWrite(13, LOW);    
   delay(1000);   
+  
   if(digitalRead(8)==1&&tmp!=1)
   {
     delay(5000);
